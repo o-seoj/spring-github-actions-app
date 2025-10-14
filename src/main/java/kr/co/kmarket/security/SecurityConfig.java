@@ -1,0 +1,89 @@
+package kr.co.kmarket.security;
+
+import kr.co.kmarket.service.CustomOauth2UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final MyUserDetailsService myUserDetailsService;
+
+
+    private final CustomLoginSuccessHandler successHandler = new CustomLoginSuccessHandler();
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomOauth2UserService customOauth2UserService) throws Exception {
+        // 로그인 설정
+        http.formLogin(form -> form
+                .loginPage("/member/login")
+                .successHandler(successHandler)
+                .failureUrl("/member/login?error=true")
+                .usernameParameter("custid")
+                .passwordParameter("pw")
+        );
+
+        // 로그아웃 설정
+        http.logout(logout -> logout
+                .logoutUrl("/member/logout")
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/member/login?logout=true"));
+
+        // 자동 로그인
+        http.rememberMe(rem -> rem
+                .key("uniqueKey")
+                .tokenValiditySeconds(86400)
+                .userDetailsService(myUserDetailsService)
+        );
+
+        // 세션 만료 시 이동
+        http.sessionManagement(session -> session
+                .invalidSessionUrl("/member/login?timeout=true")
+        );
+
+        // 인가 설정
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/admin/cs/**").hasRole("2")
+                .requestMatchers("/admin/**").hasAnyRole("3","2")
+                .requestMatchers("/my/**").hasAnyRole("1", "3")
+                .anyRequest().permitAll()
+        );
+
+        // 권한 없는 사용자 접근
+        http.exceptionHandling(exception -> exception
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+        );
+
+        // 소셜 로그인
+        http.oauth2Login(oauth -> oauth
+                .loginPage("/member/login")
+                .userInfoEndpoint(userInfo -> userInfo
+                        .userService(customOauth2UserService)
+                )                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                .defaultSuccessUrl("/")
+                .failureUrl("/member/login?error=true")
+        );
+
+
+        // 기타 설정
+        http.csrf(CsrfConfigurer::disable);
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+
+        return new BCryptPasswordEncoder();
+    }
+
+}
