@@ -15,6 +15,7 @@ import java.util.Optional;
 @Service
 public class MemberService {
     private final MemberMapper memberMapper;
+
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
