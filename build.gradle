@@ -64,3 +64,16 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+ext {
+    GOOGLE_CLIENT_ID = System.getenv('GOOGLE_CLIENT_ID')
+    GOOGLE_CLIENT_SECRET = System.getenv('GOOGLE_CLIENT_SECRET')
+    NAVER_CLIENT_ID = System.getenv('NAVER_CLIENT_ID')
+    NAVER_CLIENT_SECRET = System.getenv('NAVER_CLIENT_SECRET')
+    KAKAO_CLIENT_ID = System.getenv('KAKAO_CLIENT_ID')
+    KAKAO_CLIENT_SECRET = System.getenv('KAKAO_CLIENT_SECRET')
+    SOLAPI_KEY = System.getenv('SOLAPI_KEY')
+    SOLAPI_SECRET = System.getenv('SOLAPI_SECRET')
+    SOLAPI_FROM = System.getenv('SOLAPI_FROM')
+    YOUTUBE_API_KEY = System.getenv('YOUTUBE_API_KEY')
+}
