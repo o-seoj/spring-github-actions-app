@@ -57,17 +57,10 @@ dependencies {
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.1'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    implementation 'com.solapi:sdk:1.0.3'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-ext {
-    GOOGLE_CLIENT_ID = System.getenv('GOOGLE_CLIENT_ID')
-    GOOGLE_CLIENT_SECRET = System.getenv('GOOGLE_CLIENT_SECRET')
-    NAVER_CLIENT_ID = System.getenv('NAVER_CLIENT_ID')
-    NAVER_CLIENT_SECRET = System.getenv('NAVER_CLIENT_SECRET')
-    KAKAO_CLIENT_ID = System.getenv('KAKAO_CLIENT_ID')
-    KAKAO_CLIENT_SECRET = System.getenv('KAKAO_CLIENT_SECRET')
 }

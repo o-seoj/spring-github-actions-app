@@ -11,10 +11,10 @@
     <link rel="stylesheet" th:href="@{/css/main/style_footer.css}">
 
     <!-- Top 버튼 기능 -->
-<!--    <script th:src="@{/js/main/top-btn.js}" defer></script>-->
+    <!--    <script th:src="@{/js/main/top-btn.js}" defer></script>-->
 
     <!-- 로그인/로그아웃/관리자 메뉴 기능 -->
-<!--    <script th:src="@{/js/main/user-menu.js}" defer></script>-->
+    <!--    <script th:src="@{/js/main/user-menu.js}" defer></script>-->
 
     <!-- 회원 css 및 기능 -->
     <link rel="stylesheet" th:href="@{/css/member/Member.css}">
@@ -34,12 +34,7 @@
                 <ul class="utility-list" id="utility-menu">
                     <!-- 로그인 상태 -->
                     <li sec:authorize="isAuthenticated()">
-                        <!-- 일반 로그인일 때 -->
-                        <span th:if="${#authentication.name != null}" th:text="${#authentication.name}"></span>
-
-                        <!-- 소셜 로그인일 때 -->
-                        <span th:if="${oauth2User != null}" th:text="${oauth2User.name}"></span>
-                        님
+                        <span th:text="${member.name}">회원명</span>님
                     </li>
                     <li sec:authorize="isAuthenticated()">
                         <a th:href="@{/member/logout}">로그아웃</a>
@@ -85,7 +80,7 @@
                     </svg>
                     <span>찜</span>
                 </a>
-                <a th:href="${#authorization.expression('isAuthenticated()') ? '/kmarket/my/home' : '/kmarket/member/login'}"
+                <a th:href="${#authorization.expression('isAuthenticated()') ? '/kmarket/my/home' : '/kmarket/member/login?redirect_uri=/my/home'}"
                    class="quick-action" aria-label="마이페이지">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round">
@@ -94,7 +89,7 @@
                     </svg>
                     <span>마이페이지</span>
                 </a>
-                <a th:href="${#authorization.expression('isAuthenticated()') ? '/kmarket/product/cart' : '/kmarket/member/login'}"
+                <a th:href="${#authorization.expression('isAuthenticated()') ? '/kmarket/product/cart' : '/kmarket/member/login?redirect_uri=/product/cart'}"
                    class="quick-action" id="header-cart" aria-label="장바구니">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
