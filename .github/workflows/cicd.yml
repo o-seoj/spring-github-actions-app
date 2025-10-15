@@ -10,10 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create application-secret.yml
-        run: |
-          echo ${{secrets.APPLICATION_SECRET_YML}} | base64 --decode > src/main/resources/application-secret.yml
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -23,24 +19,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Check application-secret-log.yml
+      - name: Create application-secret.yml
         run: |
-          echo "====DEBUG: Check src/main/resources ===="
-          ls -l src/main/resources/
-          echo "====DEBUG: Contents of application-secret.yml ===="
-          cat src/main/resources/application-secret.yml
-          
+          echo ${{secrets.APPLICATION_SECRET_YML}} | base64 --decode > src/main/resources/application-secret.yml
 
-      - name: Check resources before build
-        run: ls -R src/main/resources
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2.6.0
         with:
           arguments: build
-      
-      - name: Check resources after build
-        run: ls -R build/resources/main
 
       - name: Get JAR_FILE
         id: jarfile
