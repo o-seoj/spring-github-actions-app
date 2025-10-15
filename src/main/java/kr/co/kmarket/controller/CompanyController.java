@@ -42,7 +42,9 @@ public class CompanyController {
     }
 
     @GetMapping("/index")
-    public String index(){
+    public String index(Model model){
+        List<StoryDTO> recentStorys = storyService.getRecentStory();
+        model.addAttribute("recentStorys",recentStorys);
         return "company/index";
     }
 
