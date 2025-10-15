@@ -29,12 +29,18 @@ jobs:
           ls -l src/main/resources/
           echo "====DEBUG: Contents of application-secret.yml ===="
           cat src/main/resources/application-secret.yml
+          
 
+      - name: Check resources before build
+        run: ls -R src/main/resources
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2.6.0
         with:
           arguments: build
+      
+      - name: Check resources after build
+        run: ls -R build/resources/main
 
       - name: Get JAR_FILE
         id: jarfile
