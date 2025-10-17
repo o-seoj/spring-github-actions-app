@@ -5,9 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cupang::관리자</title>
+    <title>[[${basicData.title}]][[${recentVersion}]]</title>
     <!-- header/footer css -->
-    <link rel="stylesheet" th:href="@{/css/admin/main/header_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/main/header_logo_admin.css}">
 
     <!-- 사이드바 동작 js 및 css -->
     <!-- 1. 사이드바 필요 시 admin.html main 부분 aside영역 복붙
@@ -50,7 +50,7 @@
     <div class="header-layout">
         <div class="header-content">
             <a th:href="@{/admin}">
-                <img th:src="@{/images/admin/main/cupangMS_logo(color).png}" alt="로고">
+                <img th:src="@{'/uploads/' + ${basicData.header_logo_admin}}" alt="로고">
             </a>
 
 

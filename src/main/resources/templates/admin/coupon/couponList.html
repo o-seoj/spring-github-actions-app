@@ -256,13 +256,7 @@ html, body {
 </style>
 </head>
 <body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쿠폰 리스트</title>
-    <!-- header/footer css -->
+
     <link rel="stylesheet" th:href="@{/css/admin/main/header_footer.css}">
 
     <!-- 사이드바 동작 js 및 css -->
@@ -283,7 +277,6 @@ html, body {
     <script th:src="@{/js/admin/cs/recruit/checkboxAction.js}" defer></script>
     <script th:src="@{/js/admin/cs/recruit/sidebarAction.js}" defer></script>
 
-</head>
 <body>
 
 <header>
@@ -402,8 +395,8 @@ html, body {
     <div class="header-top">
       <h1>쿠폰 목록</h1>
       <div class="breadcrumb">
-        <a href="#">HOME</a> &gt; 
-        <a href="#">쿠폰관리</a> &gt; 
+        <a href="#">HOME</a> &gt;
+        <a href="#">쿠폰관리</a> &gt;
         <span>쿠폰목록</span>
       </div>
     </div>
@@ -436,45 +429,42 @@ html, body {
           <th>관리</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><a href="#" onclick="openDetail('1012121212')">1012121212</a></td>
-          <td>개별상품 할인</td>
-          <td>10월 한달 감사 쿠폰</td>
-          <td>2,000원 할인</td>
-          <td>2025.09.17 ~ 2025.09.17</td>
-          <td>(주)다있어</td>
-          <td>102</td>
-          <td>43</td>
-          <td class="status active">발급중</td>
-          <td>2025.09.17 00:00:00</td>
-          <td><a href="#">종료</a></td>
+        <tbody>
+        <tr th:each="coupon : ${coupons}">
+            <td>
+                <a href="#" th:text="${coupon.couponNo}"
+                   th:onclick="'openDetail(' + ${coupon.couponNo} + '); return false;'"></a>
+            </td>
+            <td th:text="${coupon.couponTypename}"></td>
+            <td th:text="${coupon.couponName}"></td>
+            <td th:text="${coupon.benefit}"></td>
+            <td th:text="${coupon.usePeriod}"></td>
+            <td th:text="${coupon.issuer}"></td>
+            <td th:text="${coupon.useCount}"></td>
+            <td th:text="${coupon.useCount}"></td>
+            <td th:text="${coupon.status}"></td>
+            <td th:text="${coupon.issueDate}"></td>
+            <td><a href="#">종료</a></td>
         </tr>
-        <tr>
-          <td><a href="#" onclick="openDetail('201910101')">201910101</a></td>
-          <td>주문상품 할인</td>
-          <td>회원가입 축하 쿠폰</td>
-          <td>15% 할인</td>
-          <td>발급일로 100일 이내</td>
-          <td>최고관리자</td>
-          <td>567</td>
-          <td>262</td>
-          <td class="status active">발급중</td>
-          <td>2025.09.17 00:00:00</td>
-          <td><a href="#">종료</a></td>
-        </tr>
-      </tbody>
+        </tbody>
     </table>
 
     <!-- 하단 바 -->
     <div class="bottom-bar">
-      <div class="pagination">
-        <a href="#">이전</a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">다음</a>
-      </div>
+        <div class="pagination">
+            <a th:if="${currentPage > 1}"
+               th:href="@{/admin/coupon/list(page=${currentPage - 1}, type=${param.type}, keyword=${param.keyword})}">이전</a>
+
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${i != currentPage}"
+         th:href="@{/admin/coupon/list(page=${i}, type=${param.type}, keyword=${param.keyword})}"
+         th:text="${i}"></a>
+      <strong th:if="${i == currentPage}" th:text="${i}" style="color:red"></strong>
+            </span>
+
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{/admin/coupon/list(page=${currentPage + 1}, type=${param.type}, keyword=${param.keyword})}">다음</a>
+        </div>
       <div>
         <button class="btn" onclick="openRegister()">쿠폰등록</button>
       </div>
@@ -501,7 +491,7 @@ html, body {
         <tr><th>사용기간</th><td colspan="3" id="modalPeriod">-</td></tr>
         <tr><th>유의사항</th><td colspan="3" id="modalNote">-</td></tr>
       </table>
-      
+
     </div>
     <div class="popup-footer">
       <button onclick="closeDetail()">닫기</button>
@@ -541,90 +531,178 @@ html, body {
         </div>
 
     </div>
-
+    <!-- 쿠폰 등록 팝업 -->
+    <div class="popup-overlay" id="registerPopup">
+        <div class="popup">
+            <div class="popup-header">
+                쿠폰등록
+                <span class="close-btn" onclick="closeRegister()">X</span>
+            </div>
+            <div class="popup-content">
+                <table>
+                    <tr>
+                        <th>발급처</th><td><input type="text" id="newIssuer" placeholder="발급처 입력"></td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <td>
+                            <select id="newName">
+                                <option value="">쿠폰명 선택</option>
+                                <option value="10월 한달 감사쿠폰">10월 한달 감사쿠폰</option>
+                                <option value="회원가입 축하쿠폰">회원가입 축하쿠폰</option>
+                                <option value="배송비 무료 쿠폰">배송비 무료 쿠폰</option>
+                                <option value="특별감사 쿠폰">특별감사 쿠폰</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰종류</th>
+                        <td>
+                            <select id="newType">
+                                <option value="">쿠폰종류 선택</option>
+                                <option value="1">개별상품 할인</option>
+                                <option value="2">주문금액 할인</option>
+                                <option value="3">배송비 무료</option>
+                                <option value="4">회원등급 전용</option>
+                                <option value="5">첫구매 전용</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>혜택</th>
+                        <td>
+                            <label><input type="radio" name="benefit" value="1,000원 할인"> 1,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="2,000원 할인"> 2,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="3,000원 할인"> 3,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="4,000원 할인"> 4,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="5,000원 할인"> 5,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="10% 할인"> 10% 할인</label>
+                            <label><input type="radio" name="benefit" value="20% 할인"> 20% 할인</label>
+                            <label><input type="radio" name="benefit" value="30% 할인"> 30% 할인</label>
+                            <label><input type="radio" name="benefit" value="40% 할인"> 40% 할인</label>
+                            <label><input type="radio" name="benefit" value="50% 할인"> 50% 할인</label>
+                            <label><input type="radio" name="benefit" value="배송비무료"> 배송비무료</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사용기간</th>
+                        <td>
+                            <input type="date" id="startDate"> ~
+                            <input type="date" id="endDate">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>유의사항</th>
+                        <td><textarea id="newNote" placeholder="유의사항 입력" rows="3" style="width:100%;"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="popup-footer">
+                <button onclick="registerCoupon()">등록</button>
+                <button onclick="closeRegister()">닫기</button>
+            </div>
+        </div>
+    </div>
 </footer>
-
-</body>
-</html>
-<!-- 쿠폰 등록 팝업 -->
-<div class="popup-overlay" id="registerPopup">
-  <div class="popup">
-    <div class="popup-header">
-      쿠폰등록
-      <span class="close-btn" onclick="closeRegister()">X</span>
-    </div>
-    <div class="popup-content">
-      <table>
-        <tr>
-          <th>발급처</th><td><input type="text" id="newIssuer" placeholder="발급처 입력"></td>
-        </tr>
-        <tr>
-          <th>쿠폰종류</th><td><input type="text" id="newType" placeholder="쿠폰종류 입력"></td>
-        </tr>
-        <tr>
-          <th>혜택</th>
-          <td>
-            <label><input type="radio" name="benefit" value="1,000원 할인"> 1,000원 할인</label>
-            <label><input type="radio" name="benefit" value="2,000원 할인"> 2,000원 할인</label>
-            <label><input type="radio" name="benefit" value="3,000원 할인"> 3,000원 할인</label>
-            <label><input type="radio" name="benefit" value="4,000원 할인"> 4,000원 할인</label>
-            <label><input type="radio" name="benefit" value="5,000원 할인"> 5,000원 할인</label>
-            <label><input type="radio" name="benefit" value="10% 할인"> 10% 할인</label>
-            <label><input type="radio" name="benefit" value="20% 할인"> 20% 할인</label>
-            <label><input type="radio" name="benefit" value="30% 할인"> 30% 할인</label>
-            <label><input type="radio" name="benefit" value="40% 할인"> 40% 할인</label>
-            <label><input type="radio" name="benefit" value="50% 할인"> 50% 할인</label>
-            <label><input type="radio" name="benefit" value="배송비무료"> 배송비무료</label>
-          </td>
-        </tr>
-        <tr>
-          <th>사용기간</th><td><input type="text" id="newPeriod" placeholder="YYYY-MM-DD ~ YYYY-MM-DD"></td>
-        </tr>
-        <tr>
-          <th>유의사항</th><td><textarea id="newNote" placeholder="유의사항 입력" rows="3" style="width:100%;"></textarea></td>
-        </tr>
-      </table>
-    </div>
-    <div class="popup-footer">
-      <button onclick="registerCoupon()">등록</button>
-      <button onclick="closeRegister()">닫기</button>
-    </div>
-  </div>
-  
-</div>
-
 <script>
-  // 쿠폰 상세 팝업
-  const issuers = { '1012121212':'(주)다있어', '201910101':'최고관리자' };
-  function openDetail(couponNo) {
-    document.getElementById('couponId').textContent = couponNo;
-    document.getElementById('modalCouponNo').textContent = couponNo;
-    document.getElementById('modalIssuer').textContent = issuers[couponNo] || '-';
-    document.getElementById('modalType').textContent = '개별상품 할인';
-    document.getElementById('modalName').textContent = '10월 한달 감사 쿠폰 이벤트';
-    document.getElementById('modalBenefit').textContent = '2,000원 할인';
-    document.getElementById('modalPeriod').textContent = '2025-09-17 ~ 2025-09-17';
-    document.getElementById('modalNote').textContent = '상품 중복 할인 쿠폰\n- 상품 1개 사용 가능\n- 다른 할인 쿠폰과 중복 가능\n사용처: '+(issuers[couponNo]||'-');
-    document.getElementById('detailPopup').style.display='flex';
-  }
-  function closeDetail(){ document.getElementById('detailPopup').style.display='none'; }
+    const contextPath = '/kmarket';
 
-  // 쿠폰 등록 팝업
-  function openRegister(){ document.getElementById('registerPopup').style.display='flex'; }
-  function closeRegister(){ document.getElementById('registerPopup').style.display='none'; }
+    // 쿠폰 상세 팝업
+    const issuers = { '1012121212':'(주)다있어', '201910101':'최고관리자' };
+    function openDetail(couponNo) {
+        document.getElementById('couponId').textContent = couponNo;
+        document.getElementById('modalCouponNo').textContent = couponNo;
+        document.getElementById('modalIssuer').textContent = issuers[couponNo] || '-';
+        document.getElementById('modalType').textContent = '개별상품 할인';
+        document.getElementById('modalName').textContent = '10월 한달 감사 쿠폰 이벤트';
+        document.getElementById('modalBenefit').textContent = '2,000원 할인';
+        document.getElementById('modalPeriod').textContent = '2025-09-17 ~ 2025-09-17';
+        document.getElementById('modalNote').textContent = '상품 중복 할인 쿠폰\n- 상품 1개 사용 가능\n- 다른 할인 쿠폰과 중복 가능\n사용처: '+(issuers[couponNo]||'-');
+        document.getElementById('detailPopup').style.display='flex';
+    }
+    function closeDetail(){ document.getElementById('detailPopup').style.display='none'; }
 
-  function registerCoupon(){
-    const issuer = document.getElementById('newIssuer').value;
-    const type = document.getElementById('newType').value;
-    const benefit = document.querySelector('input[name="benefit"]:checked')?.value || '';
-    const period = document.getElementById('newPeriod').value;
-    const note = document.getElementById('newNote').value;
+    // 쿠폰 등록 팝업
+    function openRegister(){ document.getElementById('registerPopup').style.display='flex'; }
+    function closeRegister(){ document.getElementById('registerPopup').style.display='none'; }
 
-    alert(`등록된 쿠폰 내용:\n발급처: ${issuer}\n쿠폰종류: ${type}\n혜택: ${benefit}\n사용기간: ${period}\n유의사항: ${note}`);
-    closeRegister();
-  }
+    function registerCoupon() {
+        const selectedBenefit = document.querySelector('input[name="benefit"]:checked');
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
 
+        const data = {
+            issuer: document.getElementById('newIssuer').value,
+            couponType: document.getElementById('newType').value,
+            benefit: selectedBenefit ? selectedBenefit.value : '',
+            usePeriod: (startDate && endDate) ? `${startDate.value} ~ ${endDate.value}` : '',
+            manage: document.getElementById('newNote').value,
+            couponName: document.getElementById('newName').value || '기본쿠폰'
+        };
+
+        fetch(`${contextPath}/admin/coupon/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.text())
+            .then(result => {
+                if (result === 'success') {
+                    alert('등록 성공!');
+                    closeRegister();
+                    location.reload();
+                } else {
+                    alert('등록 실패!');
+                }
+            })
+            .catch(err => console.error('오류:', err));
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.search-bar button').addEventListener('click', () => {
+        const type = document.querySelector('.search-bar select').value;
+        const keyword = document.querySelector('.search-bar input').value.trim();
+
+        if (!keyword) {
+            alert('검색어를 입력해주세요.');
+            return;
+        }
+
+        fetch(`${contextPath}/admin/coupon/search?type=${type}&keyword=${keyword}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = ''; // 기존 목록 초기화
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="11">검색 결과가 없습니다.</td></tr>`;
+                    return;
+                }
+
+                data.forEach(coupon => {
+                    const row = `
+        <tr>
+            <td><a href="#" onclick="openDetail('${coupon.couponNo}'); return false;">${coupon.couponNo}</a></td>
+            <td>${coupon.couponTypename}</td>
+            <td>${coupon.couponName}</td>
+            <td>${coupon.benefit}</td>
+            <td>${coupon.usePeriod}</td>
+            <td>${coupon.issuer}</td>
+            <td>${coupon.useCount}</td>
+            <td>${coupon.useCount}</td>
+            <td>${coupon.status}</td>
+            <td>${coupon.issueDate}</td>
+            <td><a href="#" class="manage-btn" onclick="endCoupon(${coupon.couponNo})">종료</a></td>
+        </tr>
+    `;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+            })
+            .catch(err => {
+                console.error('검색 오류:', err);
+                alert('검색 중 오류가 발생했습니다.');
+            });
+    });
+    });
 </script>
-
 </body>
 </html>

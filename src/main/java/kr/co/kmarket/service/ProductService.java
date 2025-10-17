@@ -1,9 +1,6 @@
 package kr.co.kmarket.service;
 
-import kr.co.kmarket.dto.ProductDTO;
-import kr.co.kmarket.dto.ProductNoticeDTO;
-import kr.co.kmarket.dto.ProductReviewDTO;
-import kr.co.kmarket.dto.SearchDTO;
+import kr.co.kmarket.dto.*;
 
 import java.util.List;
 
@@ -20,10 +17,27 @@ public interface ProductService {
 
     // 총 상품 개수 조회
     int countProducts(SearchDTO searchDTO);
+    ProductDTO selectProductByNo(int prodNo);
 
-    ProductDTO selectProductByNo(int prod_number);
+    ProductNoticeDTO selectProductNoticeByNo(int prodNo);
 
-    ProductNoticeDTO selectProductNoticeByNo(int prod_number);
+    // 상품 리뷰 조회
+    List<ProductReviewDTO> selectProductReviews(int prodNo);
 
-    List<ProductReviewDTO> selectProductReviews(int prod_number);
+    // 상품 옵션 조회
+    List<ProductOptionDTO> selectProductOptions(int prod_number);
+
+    // 평균 리뷰 점수
+    double selectAvgRating(int prod_number);
+    int countProductReviews(int prod_number);
+    List<ProductReviewDTO> selectPagedReviews(int prod_number, int offset, int pageSize);
+
+    // 메인 - 테마별 상품 조회
+    List<ProductDTO> selectHitProducts();
+    List<ProductDTO> selectRecommendProducts();
+    List<ProductDTO> selectNewProducts();
+    List<ProductDTO> selectPopularProducts();
+    List<ProductDTO> selectDiscountProducts();
+    List<ProductDTO> selectBestProducts();
+
 }
