@@ -86,6 +86,11 @@ public class CompanyController {
     @GetMapping("/recruit/detail")
     public String recruitDetail(@RequestParam("hire_no") int hire_no, Model model) {
         HireDTO hire = recruitService.getHire(hire_no);
+
+        if (hire.getCreate_date() != null && hire.getCreate_date().length() >= 10) {
+            hire.setCreate_date(hire.getCreate_date().substring(0, 10));
+        }
+
         model.addAttribute("hire", hire);
         return "company/recruit/detail";
     }

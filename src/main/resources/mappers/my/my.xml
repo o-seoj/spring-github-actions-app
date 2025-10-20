@@ -7,7 +7,7 @@
 
     <!-- resultMap 정의 -->
     <resultMap id="OrderResultMap" type="kr.co.kmarket.dto.OrderDTO">
-        <result property="orderNumber" column="ORDERNUMBER"/>
+        <result property="order_number" column="ORDER_NUMBER"/>
         <result property="oDate" column="O_DATE"/>
         <result property="stat" column="STAT"/>
         <result property="piece" column="PIECE"/>
@@ -15,20 +15,60 @@
         <result property="img1" column="IMG_1"/>
         <result property="manufacture" column="MANUFACTURE"/>
         <result property="prod_name" column="PROD_NAME"/>
+        <result property="discount" column="DISCOUNT"/>
+        <result property="salePrice" column="SALEPRICE"/>
+        <result property="prod_number" column="PROD_NUMBER"/>
+    </resultMap>
+
+    <resultMap id="SellerDetailMap" type="kr.co.kmarket.dto.MemberDTO">
+        <result property="company_name" column="COMPANY_NAME"/>
+        <result property="name" column="NAME"/>
+        <result property="hp" column="HP"/>
+        <result property="fax_number" column="FAX_NUMBER"/>
+        <result property="email" column="EMAIL"/>
+        <result property="business_number" column="BUSINESS_NUMBER"/>
+        <result property="zip" column="ZIP"/>
+        <result property="addr1" column="ADDR1"/>
+        <result property="addr2" column="ADDR2"/>
+    </resultMap>
+
+    <resultMap id="CouponResultMap" type="kr.co.kmarket.dto.CouponDTO">
+        <id property="couponNo" column="COUPON_NO"/>      <result property="cust_number" column="CUST_NUMBER"/>  <result property="couponName" column="COUPON_NAME"/>  <result property="benefit" column="BENEFIT"/>
+        <result property="benefit2" column="benefit2"/>
+        <result property="issueDate" column="ISSUE_DATE"/>
+        <result property="status" column="STATUS"/>
+    </resultMap>
+
+    <resultMap id="PointResultMap" type="kr.co.kmarket.dto.PointDTO">
+        <id property="point_id" column="POINT_ID"/>
+        <result property="cust_number" column="CUST_NUMBER"/>
+        <result property="order_number" column="ORDER_NUMBER"/>
+        <result property="prod_number" column="PROD_NUMBER"/>
+        <result property="cart_number" column="CART_NUMBER"/>
+        <result property="point_type" column="POINT_TYPE"/>
+        <result property="point_amount" column="POINT_AMOUNT"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="balance" column="BALANCE"/>
+        <result property="expiry_date" column="EXPIRE_DATE"/>  <result property="created_at" column="CREATED_AT"/>
     </resultMap>
 
     <select id="selectRecentOrders" resultMap="OrderResultMap" parameterType="int">
         SELECT
-        a.ORDERNUMBER,
+        a.ORDER_NUMBER,
         a.O_DATE,
-        a.STAT,
+
+        CAST(a.STAT AS INT) AS STAT,
+
         b.PIECE,
         b.PRICE,
         c.IMG_1,
         c.MANUFACTURE,
-        c.PROD_NAME
-        FROM "Order" a
-        JOIN ORDERDETAIL b ON a.ORDERNUMBER = b.ORDERNUMBER
+        c.PROD_NAME,
+
+        b.PROD_NUMBER
+
+        FROM "ORDER" a
+        JOIN ORDERDETAIL b ON a.ORDER_NUMBER = b.ORDER_NUMBER
         JOIN PRODUCT c ON b.PROD_NUMBER = c.PROD_NUMBER
         WHERE a.CUST_NUMBER = #{custNumber}
         ORDER BY a.O_DATE DESC
@@ -37,29 +77,437 @@
 
     <select id="countNotConfirmedOrders" resultType="int" parameterType="int">
         SELECT COUNT(*)
-        FROM "Order"
+        FROM "ORDER"
         WHERE CUST_NUMBER = #{custNumber}
         AND STAT != 8
     </select>
 
-    <select id="selectOrderDetailByCustomer" resultMap="OrderResultMap" parameterType="int">
+    <select id="selectOrderDetailByCustomer" resultMap="OrderResultMap">
         SELECT
-        a.ORDERNUMBER,
+        a.ORDER_NUMBER,
         a.O_DATE,
         a.STAT,
         b.PIECE,
         b.PRICE,
+        b.PROD_NUMBER,
         c.IMG_1,
         c.MANUFACTURE,
         c.PROD_NAME,
         c.DISCOUNT,
         c.SALEPRICE
-        FROM "Order" a
-        JOIN ORDERDETAIL b ON a.ORDERNUMBER = b.ORDERNUMBER
+        FROM "ORDER" a
+        JOIN ORDERDETAIL b ON a.ORDER_NUMBER = b.ORDER_NUMBER
         JOIN PRODUCT c ON b.PROD_NUMBER = c.PROD_NUMBER
         WHERE a.CUST_NUMBER = #{custNumber}
-        AND a.ORDERNUMBER = #{orderNumber}
+        AND a.ORDER_NUMBER = #{orderNumber}
     </select>
 
+    <select id="selectSellerByManufacture" resultMap="SellerDetailMap" parameterType="string">
+        SELECT
+        a.COMPANY_NAME,
+        a.NAME,
+        a.HP,
+        a.FAX_NUMBER,
+        a.EMAIL,
+        a.BUSINESS_NUMBER,
+        a.ZIP,
+        a.ADDR1,
+        a.ADDR2
+        FROM MEMBER a
+        JOIN PRODUCT b ON a.COMPANY_NAME = b.MANUFACTURE
+        WHERE a.AUTH = 3
+        AND b.MANUFACTURE = #{manufacture}
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <insert id="insertQna" parameterType="kr.co.kmarket.dto.QnaDTO">
+        INSERT INTO QNA (
+        ID,
+        TYPE1,
+        TYPE2,
+        TITLE,
+        QUEST,
+        USER_ID,
+        STATUS,
+        REG_DATE
+        )
+        VALUES (
+        #{id},      #{type1},
+        #{type2},
+        #{title},
+        #{quest},
+        #{user_id},
+        #{status},
+        SYSDATE
+        )
+    </insert>
+
+    <select id="selectMaxQnaId" resultType="int">
+        SELECT NVL(MAX(ID), 0) + 1 FROM QNA
+    </select>
+
+    <select id="selectOrderStat1" resultType="kr.co.kmarket.dto.OrderDTO">
+        SELECT
+        ORDER_NUMBER,
+        STAT
+        FROM "ORDER"
+        WHERE ORDER_NUMBER = #{orderNumber} AND CUST_NUMBER = #{custNumber}
+    </select>
+
+    <update id="updateOrderConfirmation">
+        UPDATE "ORDER"
+        SET
+        STAT = 8
+        WHERE ORDER_NUMBER = #{orderNumber}
+        AND CUST_NUMBER = #{custNumber}
+    </update>
+
+    <update id="updateOrderCancel">
+        UPDATE "ORDER"
+        SET
+        STAT = 5
+        WHERE ORDER_NUMBER = #{orderNumber}
+        AND CUST_NUMBER = #{custNumber}
+        AND STAT IN (1, 2)
+    </update>
+
+    <insert id="insertReview" keyProperty="review_no">
+        <selectKey keyProperty="review_no" resultType="int" order="BEFORE">
+            SELECT REVIEW_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO REVIEW (
+        REVIEW_NO,
+        CUST_NUMBER,
+        PROD_NUMBER,
+        CONTENT,
+        RATING,
+        R_DATE,
+        R_IMG1,
+        R_IMG2,
+        R_IMG3
+        ) VALUES (
+        #{review_no},
+        #{cust_number},
+        #{prod_number},
+        #{content},
+        #{rating},
+        SYSDATE,
+        #{r_img1, jdbcType=VARCHAR},
+        #{r_img2, jdbcType=VARCHAR},
+        #{r_img3, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="selectOrderStat" resultType="java.lang.Integer">
+        SELECT
+            a.STAT
+        FROM "ORDER" a
+        JOIN ORDERDETAIL b ON a.ORDER_NUMBER = b.ORDER_NUMBER
+        JOIN PRODUCT c ON b.PROD_NUMBER = c.PROD_NUMBER
+        WHERE a.ORDER_NUMBER = #{orderNumber}
+        AND c.PROD_NUMBER = #{prodNo}
+        AND a.CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectRecentReviews" resultType="kr.co.kmarket.dto.ProductReviewDTO">
+        SELECT * FROM (
+            SELECT
+                a.REVIEW_NO,
+                a.PROD_NUMBER,
+                a.CONTENT,
+                a.RATING,
+                a.R_DATE,
+                b.PROD_NAME
+            FROM REVIEW a
+            JOIN PRODUCT b ON a.PROD_NUMBER  = b.PROD_NUMBER
+            WHERE CUST_NUMBER = #{custNumber}
+            ORDER BY a.R_DATE DESC
+        )
+        WHERE ROWNUM &lt;= 5
+    </select>
+
+    <select id="selectRecentQnas" resultType="kr.co.kmarket.dto.QnaDTO">
+        SELECT * FROM (
+            SELECT
+                ID ,
+                TYPE1 ,
+                TITLE ,
+                REG_DATE ,
+                STATUS
+            FROM QNA
+            WHERE USER_ID = #{user_id}
+            ORDER BY REG_DATE  DESC
+        )
+        WHERE ROWNUM &lt;= 5
+    </select>
+
+    <update id="orderReturn">
+        UPDATE "ORDER"
+        SET
+        STAT = 6,
+        "exchange" = #{exchange},
+        "exchange_reason" = #{exchange_reason}
+        WHERE CUST_NUMBER = #{cust_number}
+        AND ORDER_NUMBER = #{orderNumber}
+    </update>
+
+    <update id="orderExchange">
+        UPDATE "ORDER"
+        SET
+        STAT = 7,
+        "exchange" = #{exchange},
+        "exchange_reason" = #{exchange_reason}
+        WHERE CUST_NUMBER = #{cust_number}
+        AND ORDER_NUMBER = #{orderNumber}
+    </update>
+
+    <update id="updateEmail">
+        UPDATE
+        MEMBER
+        SET
+        EMAIL = #{email},
+        UPDATED_AT = sysdate
+        WHERE CUST_NUMBER = #{custNumber}
+    </update>
+
+    <update id="updateHp">
+        UPDATE
+        MEMBER
+        SET
+        HP = #{hp},
+        UPDATED_AT = sysdate
+        WHERE CUST_NUMBER = #{custNumber}
+    </update>
+
+    <update id="updateAddr">
+        UPDATE
+        MEMBER
+        SET
+        ZIP = #{zip},
+        ADDR1 = #{addr1},
+        ADDR2 = #{addr2},
+        UPDATED_AT = sysdate
+        WHERE CUST_NUMBER = #{cust_number}
+    </update>
+
+    <select id="selectUserOptions" resultType="kr.co.kmarket.dto.MemberDTO">
+        SELECT
+        ADDR1 ,
+        ADDR2 ,
+        EMAIL ,
+        HP ,
+        UPDATED_AT
+        FROM MEMBER
+        WHERE CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectUserInfo" resultType="kr.co.kmarket.dto.MemberDTO">
+        SELECT
+        CUSTID ,
+        NAME ,
+        HP ,
+        EMAIL ,
+        ZIP ,
+        ADDR1 ,
+        ADDR2 ,
+        BIRTH
+        FROM MEMBER
+        WHERE CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectQnaCountByUserId" resultType="int">
+        SELECT COUNT(ID) FROM QNA WHERE USER_ID = #{user_id}
+    </select>
+
+    <select id="selectQnaListPage" resultType="kr.co.kmarket.dto.QnaDTO">
+        SELECT
+            ID,
+            TYPE1,
+            TITLE,
+            REG_DATE,
+            STATUS
+        FROM (
+            SELECT
+            ID, TYPE1, TITLE, REG_DATE, STATUS, USER_ID,
+            ROW_NUMBER() OVER (ORDER BY ID DESC) AS rn
+            FROM QNA
+            WHERE USER_ID = #{user_id}
+        ) a
+        WHERE a.rn BETWEEN #{start}+1 AND #{start}+#{limit}
+        ORDER BY a.rn ASC
+    </select>
+
+    <select id="selectReviewsListPage" resultType="kr.co.kmarket.dto.ProductReviewDTO">
+        SELECT
+        REVIEW_NO,
+        PROD_NUMBER,
+        CONTENT,
+        RATING,
+        R_DATE,
+        PROD_NAME
+        FROM (
+        SELECT
+        a.REVIEW_NO,
+        a.PROD_NUMBER,
+        a.CONTENT,
+        a.RATING,
+        a.R_DATE,
+        b.PROD_NAME,
+        ROW_NUMBER() OVER (ORDER BY a.R_DATE DESC) AS rn
+        FROM REVIEW a
+        JOIN PRODUCT b ON a.PROD_NUMBER = b.PROD_NUMBER
+        WHERE a.CUST_NUMBER = #{custNumber}
+        )
+        WHERE rn BETWEEN #{start} + 1 AND #{start} + #{limit}
+        ORDER BY rn ASC
+    </select>
+
+    <select id="selectReviewCountByCustNumber" resultType="int">
+        SELECT COUNT(REVIEW_NO)
+        FROM REVIEW
+        WHERE CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectOrdersListPage" resultMap="OrderResultMap">
+        SELECT
+        ORDER_NUMBER,
+        O_DATE,
+        STAT,
+        PIECE,
+        PRICE,
+        PROD_NUMBER,
+        IMG_1,
+        MANUFACTURE,
+        PROD_NAME,
+        DISCOUNT,
+        SALEPRICE
+        FROM (
+        SELECT
+        a.ORDER_NUMBER,
+        a.O_DATE,
+        CAST(a.STAT AS INT) AS STAT, b.PIECE,
+        b.PRICE,
+        b.PROD_NUMBER,
+        c.IMG_1,
+        c.MANUFACTURE,
+        c.PROD_NAME,
+        c.DISCOUNT,
+        c.SALEPRICE,
+        ROW_NUMBER() OVER (ORDER BY a.O_DATE DESC) AS rn
+        FROM "ORDER" a
+        JOIN ORDERDETAIL b ON a.ORDER_NUMBER = b.ORDER_NUMBER
+        JOIN PRODUCT c ON b.PROD_NUMBER = c.PROD_NUMBER
+        WHERE a.CUST_NUMBER = #{custNumber}
+        )
+        WHERE rn BETWEEN #{start} + 1 AND #{start} + #{limit}
+        ORDER BY rn ASC
+    </select>
+
+    <select id="selectOrderCountByCustNumber" resultType="int">
+        SELECT COUNT(*)
+        FROM "ORDER" a
+        JOIN ORDERDETAIL b ON a.ORDER_NUMBER = b.ORDER_NUMBER
+        WHERE a.CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectWaitingQna" resultType="int">
+        SELECT COUNT(*)
+        FROM QNA a
+        JOIN MEMBER b ON b.CUSTID = a.USER_ID
+        WHERE b.CUST_NUMBER = #{custNumber}
+        AND a.STATUS = 'waiting'
+    </select>
+
+    <select id="selectCouponCountByCustNumber" resultType="int">
+        SELECT COUNT(*) FROM COUPON
+        WHERE STATUS = '정상'
+    </select>
+
+    <select id="selectCouponsListPage" resultMap="CouponResultMap">
+        SELECT
+        COUPON_NO,
+        COUPON_NAME,
+        BENEFIT,
+        "benefit2",   ISSUE_DATE,
+        STATUS
+        FROM (
+        SELECT
+        COUPON_NO,
+        COUPON_NAME,
+        BENEFIT,
+        "benefit2",
+        ISSUE_DATE,
+        STATUS,
+        ROW_NUMBER() OVER (ORDER BY ISSUE_DATE DESC) AS rn
+        FROM COUPON
+        WHERE STATUS = '정상' )
+        WHERE rn BETWEEN #{start} + 1 AND #{start} + #{limit}
+        ORDER BY rn ASC
+    </select>
+
+    <select id="selectPointCountByCustNumber" resultType="int">
+        SELECT COUNT(*) FROM POINT
+        WHERE CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectPointsListPage" resultMap="PointResultMap">
+        SELECT
+        POINT_ID,
+        CUST_NUMBER,
+        ORDER_NUMBER,
+        PROD_NUMBER,
+        CART_NUMBER,
+        POINT_TYPE,
+        POINT_AMOUNT,
+        DESCRIPTION,
+        BALANCE,
+        EXPIRE_DATE,  CREATED_AT
+        FROM (
+        SELECT
+        POINT_ID,
+        CUST_NUMBER,
+        ORDER_NUMBER,
+        PROD_NUMBER,
+        CART_NUMBER,
+        POINT_TYPE,
+        POINT_AMOUNT,
+        DESCRIPTION,
+        BALANCE,
+        EXPIRE_DATE,  CREATED_AT,
+        ROW_NUMBER() OVER (ORDER BY CREATED_AT DESC) AS rn
+        FROM POINT
+        WHERE CUST_NUMBER = #{custNumber}
+        )
+        WHERE rn BETWEEN #{start} + 1 AND #{start} + #{limit}
+        ORDER BY rn ASC
+    </select>
+
+    <select id="selectPoints" resultMap="PointResultMap">
+        SELECT
+        ORDER_NUMBER ,
+        POINT_TYPE ,
+        POINT_AMOUNT ,
+        DESCRIPTION ,
+        EXPIRE_DATE ,
+        CREATED_AT
+        FROM POINT WHERE CUST_NUMBER = #{custNumber}
+        ORDER BY CREATED_AT DESC
+        FETCH FIRST 5 ROWS ONLY
+    </select>
+
+    <select id="selectAllPoints" resultType="int">
+        SELECT
+            POINT
+        FROM MEMBER
+        WHERE CUST_NUMBER = #{custNumber}
+    </select>
+
+    <select id="selectCountCoupon" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM COUPON
+        WHERE STATUS = '정상'
+    </select>
 
 </mapper>

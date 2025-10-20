@@ -65,6 +65,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// Gradle 빌드 시 외부 환경변수로 민감 정보를 주입하는 설정(소셜로그인, 휴대폰인증, 유튜브 기능에 사용)
 ext {
     GOOGLE_CLIENT_ID = System.getenv('GOOGLE_CLIENT_ID') ?: 'default_value'
     GOOGLE_CLIENT_SECRET = System.getenv('GOOGLE_CLIENT_SECRET') ?: 'default_value'
