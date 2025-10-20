@@ -37,6 +37,10 @@ public class MemberService {
         return memberMapper.findCustIdInfo(name, email);
     }
 
+    public MemberDTO getUserIdInfoHp(String name, String hp){
+        return memberMapper.findCustIdInfoHp(name, hp);
+    }
+
     public int countUser(String type, String value){
         int count = 0;
         if(type.equals("custid")){
@@ -60,6 +64,10 @@ public class MemberService {
 
     public List<PolicyDTO> getAllPolicies(){
         return memberMapper.selectAllPolicy();
+    }
+
+    public MemberDTO login(String custid, String pw) {
+        return memberMapper.login(custid, pw);
     }
 
 }

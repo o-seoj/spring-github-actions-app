@@ -2,6 +2,7 @@ package kr.co.kmarket.security;
 
 import kr.co.kmarket.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,11 +15,10 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final MyUserDetailsService myUserDetailsService;
-
+    @Autowired
+    private MyUserDetailsService myUserDetailsService;
 
     private final CustomLoginSuccessHandler successHandler = new CustomLoginSuccessHandler();
 
@@ -40,11 +40,11 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/member/login?logout=true"));
 
         // 자동 로그인
-        http.rememberMe(rem -> rem
+        /* http.rememberMe(rem -> rem
                 .key("uniqueKey")
                 .tokenValiditySeconds(86400)
                 .userDetailsService(myUserDetailsService)
-        );
+        ); */  // 임시로 자동로그인 주석처리했습니다.
 
         // 세션 만료 시 이동
         http.sessionManagement(session -> session
@@ -73,7 +73,6 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/")
                 .failureUrl("/member/login?error=true")
         );
-
 
         // 기타 설정
         http.csrf(CsrfConfigurer::disable);

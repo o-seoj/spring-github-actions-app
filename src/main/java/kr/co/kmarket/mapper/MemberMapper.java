@@ -16,6 +16,8 @@ public interface MemberMapper {
 
     MemberDTO findCustIdInfo(@Param("name") String name, @Param("email") String email);
 
+    MemberDTO findCustIdInfoHp(@Param("name") String name, @Param("hp") String hp);
+
     int countByCustid(@Param("custid") String custid);
     int countByEmail(@Param("email") String email);
     int countByHp(@Param("hp") String hp);
@@ -23,5 +25,7 @@ public interface MemberMapper {
     int updatePw(@Param("custid") String custid, @Param("pw") String pw);
 
     public List<PolicyDTO> selectAllPolicy();
+
+    MemberDTO login(@Param("custid") String custid, @Param("pw") String pw);
 
 }

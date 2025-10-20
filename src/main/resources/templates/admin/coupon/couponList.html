@@ -1,268 +1,259 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>쿠폰 목록</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 0; background-color: #f5f5f5; }
-  .container { display: flex; padding-left: 20px; height: 800px; }
-/*///////////////헤더 푸터 삽입 시 공백 제거///////////////////*/
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
-/*////////////////////// header영역 //////////////////////*/
-
-.header-layout{
-    height: 60px;
-    margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-    background-color: #325a83;
-    display: flex;
-    vertical-align: middle;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-content{
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    display: flex;
-    align-items: center;
-}
-.header-content img{
-    width: 200px;
-    display: block;
-}
-
-.header-link{
-    display: flex;
-    gap: 25px;
-    vertical-align: middle;
-    align-items: center;
-}
-.header-link p{
-    margin: 0;
-}
-
-.header-link a,
-.header-link button{
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-    font-size: 10px;
-}
-
-.header-item a{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-
-}
-.header-link button{
-    border: none;
-    outline: none;
-    background-color: #91a9ce;
-    padding: 5px 15px 5px 15px;
-    cursor: pointer;
-
-
-}
-/*////////////////////// footer영역 //////////////////////*/
-.footer-layout{
-    height: 110px;
-    margin: 0 auto;
-    width: 100%;
-    background-color: #325a83;
-}
-
-
-.footer-content{
-    width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    text-align: center;
-    gap: 2px;
-}
-.footer-content img{
-    width: 150px;
-    display: block;
-    margin: 0 auto;
-}
-.about-company{
-    display: flex;
-    justify-content: center;
-}
-.footer-content h2{
-    font-size: 12px;
-    color: #333;
-    font-weight: 400;
-    margin: 0 2px;
-}
-.footer-content a{
-    color: black;
-    font-size: 13px;
-}
-
-  /* 사이드바 */
-
-/*///////////////////사이드 바///////////////////*/
-.sidebar {
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    background-color: #e0e0e0;
-
-}
-
-.sidebar a {
-    text-decoration: none;
-}
-
-
-.side-item {
-    border-bottom: 1px solid #ccc;
-}
-.main-menu p {
-    color: black;
-    font-size: 15px;
-    cursor: pointer;
-    margin: 0;
-
-}
-
-.main-menu{
-    display: flex;
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-}
-.sub-menu{
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    display: none;
-}
-
-.sub-menu.active {
-    display: flex;
-}
-.sub-menu a{
-    color: black;
-    font-size: 14px;
-}
-
-.sub-menu ul,
-.sub-menu li {
-    margin: 0;
-    list-style-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>');
-}
-
-.main-menu svg{
-    width: 17px;
-    height: 17px;
-    margin-right: 10px;
-}
-
-.side-item .main-menu:hover{
-    background-color: #ccc;
-}
-
-.side-item.active .main-menu {
-    background-color: #666;
-}
-
-.side-item.active .main-menu,
-.side-item.active .main-menu p{
-    color: white;
-    font-weight: 500;
-}
-
-.sub-menu a.active {
-    font-weight: bold;
-}
-
-
-  .content { flex: 1; padding: 20px; background-color: #fff; }
-  .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-  .header-top h1 { font-size: 20px; margin: 0; }
-  .breadcrumb { font-size: 14px; }
-  .breadcrumb a { text-decoration: none; color: #007bff; }
-  .breadcrumb span { color: #555; }
-  .breadcrumb a:hover { text-decoration: underline; }
-
-  /* 검색바 */
-  .search-bar { margin-bottom: 10px; display: flex; gap: 5px; align-items: center; }
-  .search-bar select, .search-bar input, .search-bar button { padding: 5px; }
-
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-  th { background-color: #f0f0f0; }
-
-  .status.active { color: #2ecc71; font-weight: bold; }
-  .status.expired { color: #888; }
-
-  .bottom-bar { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-  .pagination { flex: 1; text-align: center; }
-  .pagination a { margin: 0 5px; text-decoration: none; color: #000; }
-  .btn { padding: 6px 12px; background-color: #3693c2; color: white; border: none; cursor: pointer; }
-  .btn:hover { background-color: #2980b9; }
-  td a { color: #007bff; text-decoration: none; cursor: pointer; }
-  td a:hover { text-decoration: underline; }
-
-  /* 팝업 공통 */
-  .popup-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
-  }
-  .popup { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-  .popup-header { background: #333; color: #fff; padding: 12px 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-  .popup-header span#couponId { font-weight: normal; margin-left: 0; }
-  .popup-header .close-btn { cursor: pointer; font-weight: bold; }
-  .popup-content { padding: 24px; font-size: 15px; }
-  .popup-content table { width: 100%; border-collapse: collapse; }
-  .popup-content th, .popup-content td { text-align: left; padding: 10px 0; border: none; }
-  .popup-content tr { border-bottom: 1px solid #ddd; }
-  .popup-footer { text-align: center; padding: 12px; }
-  .popup-footer button { background: #4CAF50; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
-  .popup-footer button:hover { background: #45a049; }
-
-  /* 각 팝업 크기 */
-  #detailPopup .popup { width: 800px; }
-  #registerPopup .popup { width: 800px; }
-
-  /* 혜택 라디오 버튼 정렬: 5개씩 */
-  #registerPopup td {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  #registerPopup td label {
-    width: calc(20% - 12px); /* 한 줄에 5개 */
-    display: flex;
-    align-items: center;
-  }
-  #registerPopup input[type="radio"] {
-    margin-right: 6px;
-  }
-</style>
-</head>
-<body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쿠폰 리스트</title>
-    <!-- header/footer css -->
+    <title>쿠폰 목록</title>
+    <style>
+        body { margin: 0; background-color: #f5f5f5; }
+        .container { display: flex; padding-left: 20px; height: 800px; }
+        /*///////////////헤더 푸터 삽입 시 공백 제거///////////////////*/
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /*////////////////////// header영역 //////////////////////*/
+
+        .header-layout{
+            height: 60px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #325a83;
+            display: flex;
+            vertical-align: middle;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-content{
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            display: flex;
+            align-items: center;
+        }
+        .header-content img{
+            width: 200px;
+            display: block;
+        }
+
+        .header-link{
+            display: flex;
+            gap: 25px;
+            vertical-align: middle;
+            align-items: center;
+        }
+        .header-link p{
+            margin: 0;
+        }
+
+        .header-link a,
+        .header-link button{
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        .header-item a{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+
+        }
+        .header-link button{
+            border: none;
+            outline: none;
+            background-color: #91a9ce;
+            padding: 5px 15px 5px 15px;
+            cursor: pointer;
+
+
+        }
+        /*////////////////////// footer영역 //////////////////////*/
+        .footer-layout{
+            height: 110px;
+            margin: 0 auto;
+            width: 100%;
+            background-color: #325a83;
+        }
+
+
+        .footer-content{
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            padding-top: 15px;
+            text-align: center;
+            gap: 2px;
+        }
+        .footer-content img{
+            width: 150px;
+            display: block;
+            margin: 0 auto;
+        }
+        .about-company{
+            display: flex;
+            justify-content: center;
+        }
+        .footer-content h2{
+            font-size: 12px;
+            color: #333;
+            font-weight: 400;
+            margin: 0 2px;
+        }
+        .footer-content a{
+            color: black;
+            font-size: 13px;
+        }
+
+          /* 사이드바 */
+
+        /*///////////////////사이드 바///////////////////*/
+        .sidebar {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            background-color: #e0e0e0;
+
+        }
+
+        .sidebar a {
+            text-decoration: none;
+        }
+
+
+        .side-item {
+            border-bottom: 1px solid #ccc;
+        }
+        .main-menu p {
+            color: black;
+            font-size: 15px;
+            cursor: pointer;
+            margin: 0;
+
+        }
+
+        .main-menu{
+            display: flex;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+        .sub-menu{
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            display: none;
+        }
+
+        .sub-menu.active {
+            display: flex;
+        }
+        .sub-menu a{
+            color: black;
+            font-size: 14px;
+        }
+
+        .sub-menu ul,
+        .sub-menu li {
+            margin: 0;
+            list-style-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>');
+        }
+
+        .main-menu svg{
+            width: 17px;
+            height: 17px;
+            margin-right: 10px;
+        }
+
+        .side-item .main-menu:hover{
+            background-color: #ccc;
+        }
+
+        .side-item.active .main-menu {
+            background-color: #666;
+        }
+
+        .side-item.active .main-menu,
+        .side-item.active .main-menu p{
+            color: white;
+            font-weight: 500;
+        }
+
+        .sub-menu a.active {
+            font-weight: bold;
+        }
+
+
+          .content { flex: 1; padding: 20px; background-color: #fff; }
+          .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+          .header-top h1 { font-size: 20px; margin: 0; }
+          .breadcrumb { font-size: 14px; }
+          .breadcrumb a { text-decoration: none; color: #007bff; }
+          .breadcrumb span { color: #555; }
+          .breadcrumb a:hover { text-decoration: underline; }
+
+          /* 검색바 */
+          .search-bar { margin-bottom: 10px; display: flex; gap: 5px; align-items: center; }
+          .search-bar select, .search-bar input, .search-bar button { padding: 5px; }
+
+          table { width: 100%; border-collapse: collapse; font-size: 14px; }
+          th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+          th { background-color: #f0f0f0; }
+
+          .status.active { color: #2ecc71; font-weight: bold; }
+          .status.expired { color: #888; }
+
+          .bottom-bar { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+          .pagination { flex: 1; text-align: center; }
+          .pagination a { margin: 0 5px; text-decoration: none; color: #000; }
+          .btn { padding: 6px 12px; background-color: #3693c2; color: white; border: none; cursor: pointer; }
+          .btn:hover { background-color: #2980b9; }
+          td a { color: #007bff; text-decoration: none; cursor: pointer; }
+          td a:hover { text-decoration: underline; }
+
+          /* 팝업 공통 */
+          .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
+          }
+          .popup { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+          .popup-header { background: #333; color: #fff; padding: 12px 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+          .popup-header span#couponId { font-weight: normal; margin-left: 0; }
+          .popup-header .close-btn { cursor: pointer; font-weight: bold; }
+          .popup-content { padding: 24px; font-size: 15px; }
+          .popup-content table { width: 100%; border-collapse: collapse; }
+          .popup-content th, .popup-content td { text-align: left; padding: 10px 0; border: none; }
+          .popup-content tr { border-bottom: 1px solid #ddd; }
+          .popup-footer { text-align: center; padding: 12px; }
+          .popup-footer button { background: #4CAF50; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+          .popup-footer button:hover { background: #45a049; }
+
+          /* 각 팝업 크기 */
+          #detailPopup .popup { width: 800px; }
+          #registerPopup .popup { width: 800px; }
+
+          /* 혜택 라디오 버튼 정렬: 5개씩 */
+          #registerPopup td {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+          }
+          #registerPopup td label {
+            width: calc(20% - 12px); /* 한 줄에 5개 */
+            display: flex;
+            align-items: center;
+          }
+          #registerPopup input[type="radio"] {
+            margin-right: 6px;
+          }
+    </style>
     <link rel="stylesheet" th:href="@{/css/admin/main/header_footer.css}">
 
     <!-- 사이드바 동작 js 및 css -->
@@ -281,11 +272,9 @@ html, body {
     <!-- 개인 필요 및 작업 css, js -->
     <link rel="stylesheet" th:href="@{/css/admin/cs/recruit/Recruit.css}">
     <script th:src="@{/js/admin/cs/recruit/checkboxAction.js}" defer></script>
-    <script th:src="@{/js/admin/cs/recruit/sidebarAction.js}" defer></script>
-
 </head>
-<body>
 
+<body>
 <header>
     <div class="header-layout">
         <div class="header-content">
@@ -402,8 +391,8 @@ html, body {
     <div class="header-top">
       <h1>쿠폰 목록</h1>
       <div class="breadcrumb">
-        <a href="#">HOME</a> &gt; 
-        <a href="#">쿠폰관리</a> &gt; 
+        <a href="#">HOME</a> &gt;
+        <a href="#">쿠폰관리</a> &gt;
         <span>쿠폰목록</span>
       </div>
     </div>
@@ -436,45 +425,42 @@ html, body {
           <th>관리</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><a href="#" onclick="openDetail('1012121212')">1012121212</a></td>
-          <td>개별상품 할인</td>
-          <td>10월 한달 감사 쿠폰</td>
-          <td>2,000원 할인</td>
-          <td>2025.09.17 ~ 2025.09.17</td>
-          <td>(주)다있어</td>
-          <td>102</td>
-          <td>43</td>
-          <td class="status active">발급중</td>
-          <td>2025.09.17 00:00:00</td>
-          <td><a href="#">종료</a></td>
+        <tbody>
+        <tr th:each="coupon : ${coupons}">
+            <td>
+                <a href="#" th:text="${coupon.couponNo}"
+                   th:onclick="'openDetail(' + ${coupon.couponNo} + '); return false;'"></a>
+            </td>
+            <td th:text="${coupon.couponTypename}"></td>
+            <td th:text="${coupon.couponName}"></td>
+            <td th:text="${coupon.benefit}"></td>
+            <td th:text="${coupon.usePeriod}"></td>
+            <td th:text="${coupon.issuer}"></td>
+            <td th:text="${coupon.useCount}"></td>
+            <td th:text="${coupon.useCount}"></td>
+            <td th:text="${coupon.status}"></td>
+            <td th:text="${coupon.issueDate}"></td>
+            <td><a href="#">종료</a></td>
         </tr>
-        <tr>
-          <td><a href="#" onclick="openDetail('201910101')">201910101</a></td>
-          <td>주문상품 할인</td>
-          <td>회원가입 축하 쿠폰</td>
-          <td>15% 할인</td>
-          <td>발급일로 100일 이내</td>
-          <td>최고관리자</td>
-          <td>567</td>
-          <td>262</td>
-          <td class="status active">발급중</td>
-          <td>2025.09.17 00:00:00</td>
-          <td><a href="#">종료</a></td>
-        </tr>
-      </tbody>
+        </tbody>
     </table>
 
     <!-- 하단 바 -->
     <div class="bottom-bar">
-      <div class="pagination">
-        <a href="#">이전</a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">다음</a>
-      </div>
+        <div class="pagination">
+            <a th:if="${currentPage > 1}"
+               th:href="@{/admin/coupon/list(page=${currentPage - 1}, type=${param.type}, keyword=${param.keyword})}">이전</a>
+
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${i != currentPage}"
+         th:href="@{/admin/coupon/list(page=${i}, type=${param.type}, keyword=${param.keyword})}"
+         th:text="${i}"></a>
+      <strong th:if="${i == currentPage}" th:text="${i}" style="color:red"></strong>
+            </span>
+
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{/admin/coupon/list(page=${currentPage + 1}, type=${param.type}, keyword=${param.keyword})}">다음</a>
+        </div>
       <div>
         <button class="btn" onclick="openRegister()">쿠폰등록</button>
       </div>
@@ -501,7 +487,7 @@ html, body {
         <tr><th>사용기간</th><td colspan="3" id="modalPeriod">-</td></tr>
         <tr><th>유의사항</th><td colspan="3" id="modalNote">-</td></tr>
       </table>
-      
+
     </div>
     <div class="popup-footer">
       <button onclick="closeDetail()">닫기</button>
@@ -541,90 +527,178 @@ html, body {
         </div>
 
     </div>
-
+    <!-- 쿠폰 등록 팝업 -->
+    <div class="popup-overlay" id="registerPopup">
+        <div class="popup">
+            <div class="popup-header">
+                쿠폰등록
+                <span class="close-btn" onclick="closeRegister()">X</span>
+            </div>
+            <div class="popup-content">
+                <table>
+                    <tr>
+                        <th>발급처</th><td><input type="text" id="newIssuer" placeholder="발급처 입력"></td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <td>
+                            <select id="newName">
+                                <option value="">쿠폰명 선택</option>
+                                <option value="10월 한달 감사쿠폰">10월 한달 감사쿠폰</option>
+                                <option value="회원가입 축하쿠폰">회원가입 축하쿠폰</option>
+                                <option value="배송비 무료 쿠폰">배송비 무료 쿠폰</option>
+                                <option value="특별감사 쿠폰">특별감사 쿠폰</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>쿠폰종류</th>
+                        <td>
+                            <select id="newType">
+                                <option value="">쿠폰종류 선택</option>
+                                <option value="1">개별상품 할인</option>
+                                <option value="2">주문금액 할인</option>
+                                <option value="3">배송비 무료</option>
+                                <option value="4">회원등급 전용</option>
+                                <option value="5">첫구매 전용</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>혜택</th>
+                        <td>
+                            <label><input type="radio" name="benefit" value="1,000원 할인"> 1,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="2,000원 할인"> 2,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="3,000원 할인"> 3,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="4,000원 할인"> 4,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="5,000원 할인"> 5,000원 할인</label>
+                            <label><input type="radio" name="benefit" value="10% 할인"> 10% 할인</label>
+                            <label><input type="radio" name="benefit" value="20% 할인"> 20% 할인</label>
+                            <label><input type="radio" name="benefit" value="30% 할인"> 30% 할인</label>
+                            <label><input type="radio" name="benefit" value="40% 할인"> 40% 할인</label>
+                            <label><input type="radio" name="benefit" value="50% 할인"> 50% 할인</label>
+                            <label><input type="radio" name="benefit" value="배송비무료"> 배송비무료</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사용기간</th>
+                        <td>
+                            <input type="date" id="startDate"> ~
+                            <input type="date" id="endDate">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>유의사항</th>
+                        <td><textarea id="newNote" placeholder="유의사항 입력" rows="3" style="width:100%;"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="popup-footer">
+                <button onclick="registerCoupon()">등록</button>
+                <button onclick="closeRegister()">닫기</button>
+            </div>
+        </div>
+    </div>
 </footer>
-
-</body>
-</html>
-<!-- 쿠폰 등록 팝업 -->
-<div class="popup-overlay" id="registerPopup">
-  <div class="popup">
-    <div class="popup-header">
-      쿠폰등록
-      <span class="close-btn" onclick="closeRegister()">X</span>
-    </div>
-    <div class="popup-content">
-      <table>
-        <tr>
-          <th>발급처</th><td><input type="text" id="newIssuer" placeholder="발급처 입력"></td>
-        </tr>
-        <tr>
-          <th>쿠폰종류</th><td><input type="text" id="newType" placeholder="쿠폰종류 입력"></td>
-        </tr>
-        <tr>
-          <th>혜택</th>
-          <td>
-            <label><input type="radio" name="benefit" value="1,000원 할인"> 1,000원 할인</label>
-            <label><input type="radio" name="benefit" value="2,000원 할인"> 2,000원 할인</label>
-            <label><input type="radio" name="benefit" value="3,000원 할인"> 3,000원 할인</label>
-            <label><input type="radio" name="benefit" value="4,000원 할인"> 4,000원 할인</label>
-            <label><input type="radio" name="benefit" value="5,000원 할인"> 5,000원 할인</label>
-            <label><input type="radio" name="benefit" value="10% 할인"> 10% 할인</label>
-            <label><input type="radio" name="benefit" value="20% 할인"> 20% 할인</label>
-            <label><input type="radio" name="benefit" value="30% 할인"> 30% 할인</label>
-            <label><input type="radio" name="benefit" value="40% 할인"> 40% 할인</label>
-            <label><input type="radio" name="benefit" value="50% 할인"> 50% 할인</label>
-            <label><input type="radio" name="benefit" value="배송비무료"> 배송비무료</label>
-          </td>
-        </tr>
-        <tr>
-          <th>사용기간</th><td><input type="text" id="newPeriod" placeholder="YYYY-MM-DD ~ YYYY-MM-DD"></td>
-        </tr>
-        <tr>
-          <th>유의사항</th><td><textarea id="newNote" placeholder="유의사항 입력" rows="3" style="width:100%;"></textarea></td>
-        </tr>
-      </table>
-    </div>
-    <div class="popup-footer">
-      <button onclick="registerCoupon()">등록</button>
-      <button onclick="closeRegister()">닫기</button>
-    </div>
-  </div>
-  
-</div>
-
 <script>
-  // 쿠폰 상세 팝업
-  const issuers = { '1012121212':'(주)다있어', '201910101':'최고관리자' };
-  function openDetail(couponNo) {
-    document.getElementById('couponId').textContent = couponNo;
-    document.getElementById('modalCouponNo').textContent = couponNo;
-    document.getElementById('modalIssuer').textContent = issuers[couponNo] || '-';
-    document.getElementById('modalType').textContent = '개별상품 할인';
-    document.getElementById('modalName').textContent = '10월 한달 감사 쿠폰 이벤트';
-    document.getElementById('modalBenefit').textContent = '2,000원 할인';
-    document.getElementById('modalPeriod').textContent = '2025-09-17 ~ 2025-09-17';
-    document.getElementById('modalNote').textContent = '상품 중복 할인 쿠폰\n- 상품 1개 사용 가능\n- 다른 할인 쿠폰과 중복 가능\n사용처: '+(issuers[couponNo]||'-');
-    document.getElementById('detailPopup').style.display='flex';
-  }
-  function closeDetail(){ document.getElementById('detailPopup').style.display='none'; }
+    const contextPath = '/kmarket';
 
-  // 쿠폰 등록 팝업
-  function openRegister(){ document.getElementById('registerPopup').style.display='flex'; }
-  function closeRegister(){ document.getElementById('registerPopup').style.display='none'; }
+    // 쿠폰 상세 팝업
+    const issuers = { '1012121212':'(주)다있어', '201910101':'최고관리자' };
+    function openDetail(couponNo) {
+        document.getElementById('couponId').textContent = couponNo;
+        document.getElementById('modalCouponNo').textContent = couponNo;
+        document.getElementById('modalIssuer').textContent = issuers[couponNo] || '-';
+        document.getElementById('modalType').textContent = '개별상품 할인';
+        document.getElementById('modalName').textContent = '10월 한달 감사 쿠폰 이벤트';
+        document.getElementById('modalBenefit').textContent = '2,000원 할인';
+        document.getElementById('modalPeriod').textContent = '2025-09-17 ~ 2025-09-17';
+        document.getElementById('modalNote').textContent = '상품 중복 할인 쿠폰\n- 상품 1개 사용 가능\n- 다른 할인 쿠폰과 중복 가능\n사용처: '+(issuers[couponNo]||'-');
+        document.getElementById('detailPopup').style.display='flex';
+    }
+    function closeDetail(){ document.getElementById('detailPopup').style.display='none'; }
 
-  function registerCoupon(){
-    const issuer = document.getElementById('newIssuer').value;
-    const type = document.getElementById('newType').value;
-    const benefit = document.querySelector('input[name="benefit"]:checked')?.value || '';
-    const period = document.getElementById('newPeriod').value;
-    const note = document.getElementById('newNote').value;
+    // 쿠폰 등록 팝업
+    function openRegister(){ document.getElementById('registerPopup').style.display='flex'; }
+    function closeRegister(){ document.getElementById('registerPopup').style.display='none'; }
 
-    alert(`등록된 쿠폰 내용:\n발급처: ${issuer}\n쿠폰종류: ${type}\n혜택: ${benefit}\n사용기간: ${period}\n유의사항: ${note}`);
-    closeRegister();
-  }
+    function registerCoupon() {
+        const selectedBenefit = document.querySelector('input[name="benefit"]:checked');
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
 
+        const data = {
+            issuer: document.getElementById('newIssuer').value,
+            couponType: document.getElementById('newType').value,
+            benefit: selectedBenefit ? selectedBenefit.value : '',
+            usePeriod: (startDate && endDate) ? `${startDate.value} ~ ${endDate.value}` : '',
+            manage: document.getElementById('newNote').value,
+            couponName: document.getElementById('newName').value || '기본쿠폰'
+        };
+
+        fetch(`${contextPath}/admin/coupon/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.text())
+            .then(result => {
+                if (result === 'success') {
+                    alert('등록 성공!');
+                    closeRegister();
+                    location.reload();
+                } else {
+                    alert('등록 실패!');
+                }
+            })
+            .catch(err => console.error('오류:', err));
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.search-bar button').addEventListener('click', () => {
+        const type = document.querySelector('.search-bar select').value;
+        const keyword = document.querySelector('.search-bar input').value.trim();
+
+        if (!keyword) {
+            alert('검색어를 입력해주세요.');
+            return;
+        }
+
+        fetch(`${contextPath}/admin/coupon/search?type=${type}&keyword=${keyword}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = ''; // 기존 목록 초기화
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="11">검색 결과가 없습니다.</td></tr>`;
+                    return;
+                }
+
+                data.forEach(coupon => {
+                    const row = `
+        <tr>
+            <td><a href="#" onclick="openDetail('${coupon.couponNo}'); return false;">${coupon.couponNo}</a></td>
+            <td>${coupon.couponTypename}</td>
+            <td>${coupon.couponName}</td>
+            <td>${coupon.benefit}</td>
+            <td>${coupon.usePeriod}</td>
+            <td>${coupon.issuer}</td>
+            <td>${coupon.useCount}</td>
+            <td>${coupon.useCount}</td>
+            <td>${coupon.status}</td>
+            <td>${coupon.issueDate}</td>
+            <td><a href="#" class="manage-btn" onclick="endCoupon(${coupon.couponNo})">종료</a></td>
+        </tr>
+    `;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+            })
+            .catch(err => {
+                console.error('검색 오류:', err);
+                alert('검색 중 오류가 발생했습니다.');
+            });
+    });
+    });
 </script>
-
 </body>
 </html>

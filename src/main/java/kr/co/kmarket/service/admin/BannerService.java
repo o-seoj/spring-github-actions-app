@@ -22,17 +22,20 @@ public class BannerService {
         mapper.insertBanner(dto);
     }
 
-    @Transactional
-    public void updateBannerStatus(int banner_no, int status) {
-        mapper.updateBannerStatus(banner_no, status);
-    }
-
     public void deleteBanners(List<Integer> bannerNos) {
         mapper.deleteBanners(bannerNos);
     }
 
     public List<BannerDTO> getBannersByLocation(String location) {
         return mapper.selectBannersByLocation(location);
+    }
+
+    public List<BannerDTO> getBannersByLocationStatus(String location) {
+        return mapper.selectBannersByLocationStatus(location);
+    }
+
+    public void updateBannerStatus(int banner_no, int banner_status) {
+        mapper.updateBannerStatus(banner_no, banner_status);
     }
 
 }
