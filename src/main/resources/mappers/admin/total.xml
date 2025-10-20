@@ -17,7 +17,7 @@
     <select id="selectSalesByStatus" resultType="kr.co.kmarket.dto.ChartData">
         SELECT TO_CHAR(TRUNC(O_DATE), 'MM-DD') AS label,
         COUNT(*) AS value
-        FROM "ORDER"
+        FROM "Order"
         WHERE O_DATE >= TRUNC(SYSDATE) - 4
         AND STAT = #{stat}
         GROUP BY TRUNC(O_DATE)
@@ -38,54 +38,50 @@
 
     <select id="selectPriceToday">
         SELECT NVL(SUM(od.PRICE * od.PIECE), 0)
-        FROM "ORDER" o
+        FROM "Order" o
         JOIN ORDERDETAIL od
-        ON o.ORDER_NUMBER = od.ORDER_NUMBER
+        ON o.ORDERNUMBER = od.ORDERNUMBER
         WHERE TRUNC(o.O_DATE) = TRUNC(SYSDATE)
     </select>
     <select id="selectPriceYesterday">
         SELECT NVL(SUM(od.PRICE * od.PIECE), 0)
-        FROM "ORDER" o
+        FROM "Order" o
         JOIN ORDERDETAIL od
-        ON o.ORDER_NUMBER = od.ORDER_NUMBER
+        ON o.ORDERNUMBER = od.ORDERNUMBER
         WHERE TRUNC(o.O_DATE) = TRUNC(SYSDATE) - 1
     </select>
 
     <select id="selectOrderToday">
         SELECT COUNT(*)
-        FROM "ORDER"
+        FROM "Order"
         WHERE TRUNC(O_DATE) = TRUNC(SYSDATE)
     </select>
     <select id="selectOrderYesterday">
         SELECT COUNT(*)
-        FROM "ORDER"
+        FROM "Order"
         WHERE TRUNC(O_DATE) = TRUNC(SYSDATE) - 1
     </select>
 
     <select id="selectPostToday">
         SELECT COUNT(*)
-        FROM QNA
-        WHERE
-        TRUNC(REG_DATE) = TRUNC(SYSDATE)
+        FROM CSBOARD b
+        JOIN CS c
+        ON b.CS_CD = c.CS_CD
+        WHERE c.UP_CS_CD = 3
+        AND TRUNC(b.W_DATE) = TRUNC(SYSDATE)
     </select>
     <select id="selectPostYesterday">
         SELECT COUNT(*)
-        FROM QNA
-        WHERE
-        TRUNC(REG_DATE) = TRUNC(SYSDATE - 1)
+        FROM CSBOARD b
+        JOIN CS c
+        ON b.CS_CD = c.CS_CD
+        WHERE c.UP_CS_CD = 3
+        AND TRUNC(b.W_DATE) = TRUNC(SYSDATE - 1)
     </select>
 
     <select id="selectStatus">
         SELECT COUNT(*)
-        FROM "ORDER"
+        FROM "Order"
         WHERE STAT = #{status}
     </select>
-
-    <select id="selectQnq" resultType="kr.co.kmarket.dto.QnaDTO">
-        SELECT id, title, reg_date, user_id
-        FROM qna
-        ORDER BY reg_date DESC
-        FETCH FIRST 5 ROWS ONLY
-    </select>
-
 </mapper>

@@ -1,7 +1,6 @@
 package kr.co.kmarket.service.admin;
 
 import kr.co.kmarket.dto.ChartData;
-import kr.co.kmarket.dto.QnaDTO;
 import kr.co.kmarket.mapper.admin.TotalMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +56,5 @@ public class TotalService {
         return totalMapper.selectStatus(stat);
     }
 
-    public List<QnaDTO> getQnaInfo(){
-        return totalMapper.selectQnq();
-    }
 
 }

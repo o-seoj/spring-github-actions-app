@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
     headerCart.addEventListener("click", () => {
         if (userType === "guest") {
             if (confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
-                location.href = "/kmarket/member/login";
+                location.href = "/cupang/login";
             }
         } else if (userType === "user") {
-            location.href = "/kmarket/product/cart";
+            location.href = "/cupang/prodCart";
         }
     });
 });

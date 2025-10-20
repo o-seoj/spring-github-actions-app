@@ -7,66 +7,65 @@ const btnBuy  = document.querySelector(".btn.buy");
 btnWish.addEventListener("click", () => {
     if (userType === "guest") {
         // 비로그인 → 로그인 페이지
-        location.href = "/kmarket/member/login";
+        location.href = "/login";
     } else if (userType === "user") {
         // 로그인 상태 → 하트 토글
         btnWish.classList.toggle("active");
     }
 });
 
-/* 장바구니 기능 (서버 연동 버전) */
-btnCart.addEventListener("click", async () => {
+/* 장바구니 기능 */
+btnCart.addEventListener("click", () => {
     if (userType === "guest") {
         if (confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
-            location.href = "/kmarket/member/login";
+            location.href = "/cupang/login"; // context-path 포함
         }
-        return;
-    }
+    } else {
+        // 옵션 데이터 가져오기
+        const optionEl = document.querySelector("#opt");
+        const selectedOpt = optionEl.options[optionEl.selectedIndex];
+        if (!selectedOpt.value) {
+            alert("옵션을 선택해주세요!");
+            return;
+        }
 
-    // 옵션 선택 확인
-    const optionEl = document.querySelector("#opt");
-    const selectedOpt = optionEl.options[optionEl.selectedIndex];
-    if (!selectedOpt.value) {
-        alert("옵션을 선택해주세요!");
-        return;
-    }
+        const name = document.querySelector(".prod-title").textContent;
+        const qty = parseInt(document.querySelector(".prod-selected input").value) || 1;
+        const price = parseInt(selectedOpt.dataset.price);
+        const discount = 0;
 
-    // 수량, 상품 정보
-    const prodNumber = btnCart.dataset.prodNumber; // ✅ 상품번호
-    const quantity = parseInt(document.querySelector(".prod-selected input")?.value || 1);
-    const optName = selectedOpt.text;
+        // 기존 장바구니 불러오기
+        let cartData = JSON.parse(localStorage.getItem("cartData")) || [];
 
-    try {
-        // 서버에 장바구니 등록 요청
-        const res = await fetch("/kmarket/product/cart/add", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                prod_number: prodNumber,
-                quantity: quantity,
-                opt_name: optName
-            })
-        });
-
-        const result = await res.text();
-        if (result === "success") {
-            if (confirm("상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?")) {
-                location.href = "/kmarket/product/cart";
-            }
+        // 중복 여부 확인
+        const exist = cartData.find(i => i.id === selectedOpt.value);
+        if (exist) {
+            exist.qty += qty;
         } else {
-            alert("장바구니 담기 중 오류가 발생했습니다.");
+            cartData.push({
+                id: selectedOpt.value,
+                name: name + " - " + selectedOpt.text,
+                price: price,
+                discount: discount,
+                qty: qty
+            });
         }
-    } catch (err) {
-        console.error(err);
-        alert("서버와 통신 중 오류가 발생했습니다.");
+
+        // localStorage 갱신
+        localStorage.setItem("cartData", JSON.stringify(cartData));
+
+        // 알림창
+        if (confirm("상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?")) {
+            location.href = "/cupang/prodCart";  // ✅ context-path 포함
+        }
     }
 });
 
 /* 바로구매 기능 */
 btnBuy.addEventListener("click", () => {
     if (userType === "guest") {
-        location.href = "/kmarket/member/login";
+        location.href = "/login";
     } else {
-        location.href = "/kmarket/member/checkout";
+        location.href = "/checkout";
     }
 });

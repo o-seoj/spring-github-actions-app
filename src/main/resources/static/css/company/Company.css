@@ -86,11 +86,7 @@ html, body {
     font-size: 12px;
     color: #48535B;
     font-weight: 400;
-    margin: 0 3px;
-}
-.about-company{
-    display: flex;
-    flex-direction: column;
+    margin: 0 2px;
 }
 .about-company a{
     color: black;
@@ -688,53 +684,27 @@ html, body {
     color: gray;
 }
 
-.detail-area{
+.info{
     display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 35px;
-    gap: 50px;
+    justify-content: space-between;
+    align-content: end;
+}
+.info span{
+    font-size: 17px;
 }
 
-.hire-detail-table {
-    border-top: 2px solid #333;
-    border-bottom: 1px solid #333;
-    border-collapse: collapse;
-    width: 1200px;
+.content{
+    font-size: 20px;
 }
 
-.hire-detail-table th,
-.hire-detail-table td {
-    padding: 15px 20px;
-    border-bottom: 1px solid #ccc;
-}
-.hire-detail-table tr:not(:first-child) th {
-    border-right: 1px solid #ccc;
-}
-.hire-detail-table tr td:nth-child(4),
-.hire-detail-table tr th:nth-child(3) {
-    border-left: 1px solid #ccc;
+hr {
+    margin: 20px 0;
 }
 
-.hire-detail-table tr:last-child th,
-.hire-detail-table tr:last-child td {
-    border-bottom: none;
+.recruit-detail{
+    margin-bottom: 50px;
 }
-
-.content-cell {
-    min-height: 150px;
-    padding: 10px;
-}
-
-.hire-detail-table tr:first-child th {
-    text-align: left;
-    font-size: 1.2em;
-    padding-left: 10px;
-}
-
-
-    /* ===== 페이지네이션 ===== */
+/* ===== 페이지네이션 ===== */
 .page{
     display:flex;
     justify-content:center;

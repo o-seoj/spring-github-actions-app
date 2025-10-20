@@ -47,6 +47,4 @@ public class MemberDTO {
 
     private String Date;
 
-    private String updated_at;
-
 }
