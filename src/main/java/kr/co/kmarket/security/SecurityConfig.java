@@ -70,9 +70,18 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfo -> userInfo
                         .userService(customOauth2UserService)
                 )
-                .defaultSuccessUrl("/")
+                .successHandler((request, response, authentication) -> {
+                    // Authentication 객체 확인
+                    Object principal = authentication.getPrincipal();
+                    if (principal instanceof CustomOauth2UserDetails oauthUser) {
+                        // 세션에 MemberDTO 저장
+                        request.getSession().setAttribute("member", oauthUser.getMember());
+                    }
+                    response.sendRedirect("/"); // 로그인 후 이동
+                })
                 .failureUrl("/member/login?error=true")
         );
+
 
         // 기타 설정
         http.csrf(CsrfConfigurer::disable);
