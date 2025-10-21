@@ -66,7 +66,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfo -> userInfo
                         .userService(customOauth2UserService)
                 )
-                .successHandler(successHandler)
+                .defaultSuccessUrl("/")
                 .failureUrl("/member/login?error=true")
         );
 
