@@ -4,14 +4,11 @@ import kr.co.kmarket.dto.MemberDTO;
 import kr.co.kmarket.security.CustomOauth2UserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Map;
 
@@ -70,15 +67,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             memberService.saveSocial(member);
         }
         log.info("CustomOauth2UserService member: " + member);
-
-        CustomOauth2UserDetails userDetails = new CustomOauth2UserDetails(member, attributes);
-
-        var request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        var session = request.getSession();
-        session.setAttribute("member", member); // MemberDTO를 세션에 저장
-        session.setAttribute("cust_number", member.getCust_number());
-
-        return userDetails;
+        return new CustomOauth2UserDetails(member, attributes);
 
     }
 }

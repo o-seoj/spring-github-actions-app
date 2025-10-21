@@ -7,6 +7,7 @@ import kr.co.kmarket.dto.BannerDTO;
 import kr.co.kmarket.dto.BasicDTO;
 import kr.co.kmarket.dto.CategoryDTO;
 import kr.co.kmarket.dto.MemberDTO;
+import kr.co.kmarket.security.CustomOauth2UserDetails;
 import kr.co.kmarket.security.MyUserDetails;
 import kr.co.kmarket.service.MemberService;
 import kr.co.kmarket.service.PageCounterService;
@@ -35,12 +36,15 @@ public class GlobalController {
     private final BannerService bannerService;
 
     @ModelAttribute("member")
-    public MemberDTO addUserToModel(@AuthenticationPrincipal MyUserDetails myMember) {
-        if (myMember != null) {
-            return myMember.getMemberDTO();
+    public MemberDTO addUserToModel(@AuthenticationPrincipal Object principal) {
+        if (principal instanceof MyUserDetails myUser) {
+            return myUser.getMemberDTO();
+        } else if (principal instanceof CustomOauth2UserDetails oauthUser) {
+            return oauthUser.getMember(); // ← CustomOauth2UserDetails 내부에 getMember() 메서드 있어야 함
         }
-        return new MemberDTO();
+        return new MemberDTO(); // 로그인 안 한 경우
     }
+
 
     @ModelAttribute("visitorTotal")
     public int visitorTotal(HttpServletRequest request, HttpServletResponse response) {
