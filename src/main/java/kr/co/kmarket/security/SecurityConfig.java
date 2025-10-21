@@ -1,7 +1,8 @@
 package kr.co.kmarket.security;
 
+import jakarta.servlet.http.HttpSession;
+import kr.co.kmarket.dto.MemberDTO;
 import kr.co.kmarket.service.CustomOauth2UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
@@ -71,12 +69,16 @@ public class SecurityConfig {
                         .userService(customOauth2UserService)
                 )
                 .successHandler((request, response, authentication) -> {
-                    // Authentication 객체 확인
                     Object principal = authentication.getPrincipal();
                     if (principal instanceof CustomOauth2UserDetails oauthUser) {
-                        // 세션에 MemberDTO 저장
-                        request.getSession().setAttribute("member", oauthUser.getMember());
+                        MemberDTO member = oauthUser.getMember();
+
+                        HttpSession session = request.getSession();
+                        session.setAttribute("cust_number", member.getCust_number());
+                        session.setAttribute("user_id", member.getCustid());
+                        session.setAttribute("member", member);
                     }
+
                     response.sendRedirect("/"); // 로그인 후 이동
                 })
                 .failureUrl("/member/login?error=true")
