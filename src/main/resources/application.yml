@@ -105,4 +105,4 @@ spring:
 
 file:
   upload:
-    path: C:/Kmarket/uploads/
+    path: /home/ec2-user/uploads/
