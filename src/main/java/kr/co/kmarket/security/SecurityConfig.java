@@ -1,7 +1,5 @@
 package kr.co.kmarket.security;
 
-import jakarta.servlet.http.HttpSession;
-import kr.co.kmarket.dto.MemberDTO;
 import kr.co.kmarket.service.CustomOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -68,22 +66,9 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfo -> userInfo
                         .userService(customOauth2UserService)
                 )
-                .successHandler((request, response, authentication) -> {
-                    Object principal = authentication.getPrincipal();
-                    if (principal instanceof CustomOauth2UserDetails oauthUser) {
-                        MemberDTO member = oauthUser.getMember();
-
-                        HttpSession session = request.getSession();
-                        session.setAttribute("cust_number", member.getCust_number());
-                        session.setAttribute("user_id", member.getCustid());
-                        session.setAttribute("member", member);
-                    }
-
-                    response.sendRedirect("/"); // 로그인 후 이동
-                })
+                .successHandler(successHandler)
                 .failureUrl("/member/login?error=true")
         );
-
 
         // 기타 설정
         http.csrf(CsrfConfigurer::disable);
