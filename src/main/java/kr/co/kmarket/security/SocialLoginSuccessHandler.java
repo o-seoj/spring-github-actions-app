@@ -10,6 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -35,8 +38,27 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         log.info("Social login successful: {}", member);
 
-        // 리다이렉트 처리
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+        // 1. 로그인 이전 요청 주소 확인
+        RequestCache requestCache = new HttpSessionRequestCache();
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+        if (savedRequest != null) {
+            String targetUrl = savedRequest.getRedirectUrl();
+            redirectStrategy.sendRedirect(request, response, targetUrl);
+            return; // 리다이렉트 완료 후 종료
+        }
+
+        // 2. 세션에 저장된 redirect_uri 확인
+        String redirectUri = (String) session.getAttribute("redirect_uri");
+        if (redirectUri != null) {
+            session.removeAttribute("redirect_uri");
+            redirectStrategy.sendRedirect(request, response, redirectUri);
+            return;
+        }
+
+        // 3. 기본 리다이렉트
         if (member.getAuth() == 2 || member.getAuth() == 3) {
             redirectStrategy.sendRedirect(request, response, "/admin");
         } else {
