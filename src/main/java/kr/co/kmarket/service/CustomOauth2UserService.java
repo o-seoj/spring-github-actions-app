@@ -76,6 +76,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         var request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         var session = request.getSession();
         session.setAttribute("member", member); // MemberDTO를 세션에 저장
+        session.setAttribute("cust_number", member.getCust_number());
 
         return userDetails;
 
